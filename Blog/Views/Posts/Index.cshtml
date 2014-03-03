@@ -1,0 +1,26 @@
+﻿@using Blog.Models;
+@model IEnumerable<Post>
+           
+@{
+    ViewBag.Title = "Index";
+    bool isPreviousLinkVisible = ViewBag.isPreviousLinkVisible ?? false;
+    bool isNextLinkVisible = ViewBag.isNextLinkVisible ?? false;
+    bool isAdmin = ViewBag.IsAdmin ?? false;
+    
+}
+<!-- For each post, show the title -->
+@foreach (Post post in Model)
+{
+    @post.Title<br /> 
+}
+
+<!--Add the Previous & Next Links -->
+@if (isPreviousLinkVisible)
+{ 
+<a id="previousLink" href="@Href("~/Posts/Index/" + (ViewBag.PageNumber - 1))">&lt; Previous Page </a>
+}
+
+@if (isNextLinkVisible)
+{ 
+<a id="nextLink" href="@Href("~/Posts/Index/" + (ViewBag.PageNumber + 1))"> Next Page &gt; </a>
+}

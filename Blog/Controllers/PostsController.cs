@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Blog.Models;
+using System.Text;
 
 namespace Blog.Controllers
 {
@@ -11,12 +12,26 @@ namespace Blog.Controllers
     {
         //accessing the model
         private BlogModel model = new BlogModel();
+        private const int PostsPerPage = 4;
 
-        public ActionResult Index()
+        public ActionResult Index(int? id)
         {
-            return View();
+            int pageNumber = id ?? 0;
+            //Get a list of posts where date is valid and order by date
+            IEnumerable<Post> posts =
+                (from post in model.Posts
+                 where post.DateTime < DateTime.Now
+                 orderby post.DateTime descending
+                 select post).Skip(pageNumber * PostsPerPage).Take(PostsPerPage + 1);
+            ViewBag.IsPreviousLinkVisible = pageNumber > 0;
+            ViewBag.IsNextLinkVisible = posts.Count() > PostsPerPage;
+            ViewBag.PageNumber = pageNumber;
+            //Tell the view if administrator is logged in
+            ViewBag.IsAdmin = IsAdmin;
+            return View(posts.Take(PostsPerPage));
         }
 
+        [ValidateInput(false)]
         //To enter data into the model
         public ActionResult Update(int? id, string title, string body, DateTime dateTime, string tags)
         {
@@ -53,6 +68,22 @@ namespace Blog.Controllers
             //Redirect to the Detailed view of the new created Post
             return RedirectToAction("Details", new { id = post.ID });
 
+        }
+
+        //An action to prompt the user to enter data into the posts
+        public ActionResult Edit(int? id)
+        {
+            //Get the requested post and accumulate list of current tagnames
+            Post post = GetPost(id);
+            StringBuilder tagList = new StringBuilder();
+            foreach (Tag tag in post.Tags)
+            {
+                tagList.AppendFormat("{0} ", tag.Name);
+            }
+            //pass this list to the view
+            ViewBag.Tags = tagList.ToString();
+            //Return a view of this post
+            return View(post);
         }
 
         private Tag GetTag(string tagName)
