@@ -158,7 +158,7 @@ namespace Blog.Controllers
 
 
         public bool IsAdmin { get { return true; /*return Session["IsAdmin"] != null && (bool)Session["IsAdmin"];  */} }
- 
 
+        
     }
 }

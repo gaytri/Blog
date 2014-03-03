@@ -28,7 +28,7 @@ namespace Blog.Controllers
                 Session["Nonce"] = newNonce;
                 return View(model: newNonce);
             }
-
+            
             //If the hash is present, validate it
             Administrator administrator = model.Administrators.Where(x => x.Name == name).FirstOrDefault();
             //get the current random number
@@ -38,6 +38,7 @@ namespace Blog.Controllers
                 return RedirectToAction("Index", "Posts");
             }
 
+            
             string computedHash;
             //Generate the hash
             using (SHA256 sha256 = SHA256.Create())

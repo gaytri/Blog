@@ -11,7 +11,7 @@
                 <div class="day">@post.DateTime.ToString("dd")</div>
             </div>
             <div class="commentsTab">
-                <a href="@Href("~/Posts/Details/" + post.ID + "#comments")">@post.Comments.Count</a>
+                <a href="@Href("~/Posts/Details/" + post.ID + "#comments")"><img src="@Href("~/Content/Images/comments.jpg")" alt="Comments" />@post.Comments.Count</a>
             </div>
         </div>
         <div class="postContent">

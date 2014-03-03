@@ -9,6 +9,37 @@
 </head>
 
 <body>
-    @RenderBody()   
+    <div id="header">
+        <a href="@Href("~/")"><img src="@Href("~/Content/Images/Title.jpg")" alt="Gaytri Blogger" /></a>
+    </div>
+    <div id="content">
+        <div id="topSeparator" class="separator"></div>
+        <div id="sidebar">
+            <br /><br /><br /><br /><br />
+            <img id="portrait" src="@Href("~/Content/Images/selfy.jpg")" alt="Portrait" />
+            <br /><br /><br /><br /><br />
+            <img id="portrait1" src="@Href("~/Content/Images/selfy1.jpg")" alt="Portrait1" />
+        </div>
+        <div id="main">
+            @RenderBody()
+        </div>
+        <div id="bottomSeparator" class="separator"></div>
+    </div>
+    <div id="footer">
+        <div id="copyright">Copyright &copy; 2014, Gaytri Blog </div>
+        @if (ViewBag.IsAdmin ?? false)
+        {
+            <div class="controlPanel">
+                <a href="@Href("~/Posts/Edit")">New Post</a> |
+                <a href="@Href("~/Accounts/Logout")">Logout</a>
+            </div>
+        }
+        else
+        {
+            <div class="controlPanel">
+                <a href="@Href("~/Accounts/Login")">Login</a>
+            </div>
+        }
+    </div>
 </body>
 </html>
