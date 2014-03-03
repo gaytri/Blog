@@ -31,6 +31,38 @@ namespace Blog.Controllers
             return View(posts.Take(PostsPerPage));
         }
 
+        //To view the complete details of the selected post
+        public ActionResult Details(int id)
+        {
+            Post post = GetPost(id);
+            ViewBag.IsAdmin = IsAdmin;
+            return View(post);
+        }
+
+        //Take care of the dangerous input
+        [ValidateInput(false)]
+        public ActionResult Comment(int id, string name, string email, string body)
+        {
+            Post post = GetPost(id);
+            Comment comment = new Comment();
+            //Point the comment at the post
+            comment.Post = post;
+            comment.DateTime = DateTime.Now;
+            comment.Name = name;
+            comment.Email = email;
+            comment.Body = body;
+            model.AddToComments(comment);
+            model.SaveChanges();
+            return RedirectToAction("Details", new { id = id });
+        }
+
+        public ActionResult Tags(string id)
+        {
+            Tag tag = GetTag(id);
+            ViewBag.IsAdmin = IsAdmin;
+            return View("Index", tag.Posts);
+        }
+
         [ValidateInput(false)]
         //To enter data into the model
         public ActionResult Update(int? id, string title, string body, DateTime dateTime, string tags)
@@ -68,6 +100,31 @@ namespace Blog.Controllers
             //Redirect to the Detailed view of the new created Post
             return RedirectToAction("Details", new { id = post.ID });
 
+        }
+
+        //Delete action only for the Administrator 
+        public ActionResult Delete(int id)
+        {
+            if (IsAdmin)
+            {
+                Post post = GetPost(id);
+                model.DeleteObject(post);
+                model.SaveChanges();
+            }
+            //After delete render to the Index page displaying rest of the posts
+            return RedirectToAction("Index");
+
+        }
+
+        public ActionResult DeleteComment(int id)
+        {
+            if (IsAdmin)
+            {
+                Comment comment = model.Comments.Where(x => x.ID == id).First();
+                model.DeleteObject(comment);
+                model.SaveChanges();
+            }
+            return RedirectToAction("Index");
         }
 
         //An action to prompt the user to enter data into the posts

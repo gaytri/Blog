@@ -11,7 +11,8 @@
 <!-- For each post, show the title -->
 @foreach (Post post in Model)
 {
-    @post.Title<br /> 
+    <!-- Rendering the post helper to view the posts -->
+    @PostHelper.Render(post, Html, isAdmin, false)
 }
 
 <!--Add the Previous & Next Links -->
